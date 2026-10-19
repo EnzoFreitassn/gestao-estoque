@@ -8,7 +8,10 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // Runtime: conexão "pooled" (PgBouncer) — ex.: host com "-pooler" no Neon.
   url      = env("DATABASE_URL")
+  // Migrations: conexão direta (sem pooler). Em dev local aponta para o mesmo banco.
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {

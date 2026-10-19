@@ -12,6 +12,7 @@ jobs:
     env:
       # Valores dummy: o build/testes não acessam o banco de verdade.
       DATABASE_URL: "postgresql://user:pass@localhost:5432/estoque?schema=public"
+      DIRECT_URL: "postgresql://user:pass@localhost:5432/estoque?schema=public"
       AUTH_SECRET: "ci-dummy-secret-0123456789abcdef0123456789abcdef"
       AUTH_TRUST_HOST: "true"
       NEXT_TELEMETRY_DISABLED: "1"

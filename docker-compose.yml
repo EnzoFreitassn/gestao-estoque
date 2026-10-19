@@ -37,6 +37,7 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/estoque?schema=public"
+      DIRECT_URL: "postgresql://postgres:postgres@db:5432/estoque?schema=public"
 
   app:
     profiles: ["full"]
