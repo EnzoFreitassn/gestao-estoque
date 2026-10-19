@@ -1,0 +1,84 @@
+// Prisma schema — Sistema de Gestão de Estoque
+// Preços em Decimal(12,2) (dinheiro nunca em Float).
+// Quantidades em Decimal(12,3) para suportar venda fracionada (ex.: kg).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  EMPLOYEE
+}
+
+enum MovementType {
+  IN
+  OUT
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String // hash bcrypt
+  role      Role     @default(EMPLOYEE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movements StockMovement[]
+  auditLogs AuditLog[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  sku         String   @unique
+  description String?
+  category    String
+  costPrice   Decimal  @db.Decimal(12, 2)
+  salePrice   Decimal  @db.Decimal(12, 2)
+  quantity    Decimal  @default(0) @db.Decimal(12, 3)
+  minQuantity Decimal  @default(0) @db.Decimal(12, 3)
+  unit        String // kg, un, pacote, ...
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  movements StockMovement[]
+
+  @@index([category])
+}
+
+model StockMovement {
+  id        String       @id @default(cuid())
+  productId String
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  type      MovementType
+  quantity  Decimal      @db.Decimal(12, 3)
+  reason    String?
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  createdAt DateTime     @default(now())
+
+  @@index([productId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String // ex.: "product.create", "movement.create"
+  entity    String // ex.: "Product"
+  entityId  String
+  details   Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}

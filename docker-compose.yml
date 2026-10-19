@@ -1,0 +1,63 @@
+# Em DESENVOLVIMENTO use apenas o Postgres (app roda local com `npm run dev`):
+#   docker compose up -d db
+# Para subir a stack completa (app + banco), use o profile "full":
+#   docker compose --profile full up -d --build
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: estoque_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: estoque
+    ports:
+      # Host 5433 para não conflitar com outros Postgres locais na 5432.
+      - "5433:5432"
+    volumes:
+      - estoque_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d estoque"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Job de migração: usa o stage "builder" (deps completas do Prisma CLI),
+  # aplica as migrations e encerra. O app aguarda sua conclusão.
+  migrate:
+    profiles: ["full"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    command: ["npx", "prisma", "migrate", "deploy"]
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/estoque?schema=public"
+
+  app:
+    profiles: ["full"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: estoque_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      # Dentro da rede do compose o banco é alcançado pelo host "db" na 5432.
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/estoque?schema=public"
+      AUTH_SECRET: "${AUTH_SECRET:-troque-este-segredo-de-32-bytes-em-producao}"
+      AUTH_TRUST_HOST: "true"
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+
+volumes:
+  estoque_pgdata:
