@@ -1,4 +1,6 @@
-# Gestão de Estoque
+# Farina — Gestão de Estoque
+
+[![CI](https://github.com/EnzoFreitassn/gestao-estoque/actions/workflows/ci.yml/badge.svg)](https://github.com/EnzoFreitassn/gestao-estoque/actions/workflows/ci.yml)
 
 Sistema de gestão de estoque para pequenos negócios, construído em torno de um
 caso real: uma **fábrica de massas**. Projeto full stack de portfólio, com foco
@@ -153,8 +155,23 @@ docker compose --profile full run --rm migrate npx prisma db seed
 | `npm run build` / `npm run start` | Build e execução de produção |
 | `npm run db:migrate` | Cria/aplica migrations (Prisma) |
 | `npm run db:seed` | Popula dados de exemplo |
+| `npm test` | Roda a suíte de testes (Vitest) |
+| `npm run test:watch` | Testes em modo watch |
 | `npm run db:studio` | Abre o Prisma Studio |
 | `npm run db:reset` | Reseta o banco e reaplica migrations + seed |
+
+---
+
+## Qualidade
+
+- **Testes (Vitest)**: cobrem a validação de produtos (regra de unidade inteira,
+  SKU, preços, coerção de tipos), a validação de movimentações, a formatação
+  pt-BR (moeda/quantidade/data) e o parsing da importação de planilhas
+  (linhas válidas × inválidas, round-trip export→import, cabeçalho inválido).
+- **CI (GitHub Actions)**: a cada push/PR roda type-check (`tsc`), testes e build
+  de produção. Veja o badge no topo.
+- **TypeScript strict** e validação com **Zod na borda do servidor** em toda
+  mutação — o client nunca é fonte de verdade.
 
 ---
 
