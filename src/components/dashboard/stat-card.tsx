@@ -48,7 +48,7 @@ export function StatCard({
       <CardContent>
         <div
           className={cn(
-            "text-2xl font-semibold tracking-tight",
+            "font-display text-2xl font-semibold tracking-tight tabular-nums",
             accent === "warning" && "text-amber-600 dark:text-amber-400",
           )}
         >

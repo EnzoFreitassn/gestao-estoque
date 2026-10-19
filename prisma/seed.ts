@@ -151,7 +151,7 @@ async function main() {
     where: { email: "dono@massas.com" },
     update: {},
     create: {
-      name: "Dona das Massas",
+      name: "Marina Bianchi",
       email: "dono@massas.com",
       password: ownerHash,
       role: Role.OWNER,
@@ -162,7 +162,7 @@ async function main() {
     where: { email: "funcionario@massas.com" },
     update: {},
     create: {
-      name: "Funcionário Teste",
+      name: "Carlos Nunes",
       email: "funcionario@massas.com",
       password: employeeHash,
       role: Role.EMPLOYEE,
@@ -178,14 +178,16 @@ async function main() {
   }
 
   // Histórico de movimentações de exemplo (apenas na primeira carga).
-  // "Estoque inicial" (IN = quantidade atual) + atividade recente NET-ZERO,
-  // para não divergir das quantidades definidas acima.
+  // Estratégia: o "estoque inicial" de cada produto é distribuído em dias
+  // diferentes dos últimos 14 dias (evita o pico único no gráfico), e a
+  // atividade recente usa pares entrada/saída de mesma quantidade (saldo zero
+  // por produto, para não divergir das quantidades definidas acima).
   const movementCount = await prisma.stockMovement.count();
   if (movementCount === 0) {
-    const daysAgo = (n: number) => {
+    const daysAgo = (n: number, hour = 10) => {
       const d = new Date();
       d.setDate(d.getDate() - n);
-      d.setHours(10, 0, 0, 0);
+      d.setHours(hour, 0, 0, 0);
       return d;
     };
 
@@ -193,32 +195,47 @@ async function main() {
       select: { id: true, sku: true, quantity: true },
     });
 
-    for (const p of all) {
-      if (p.quantity.greaterThan(0)) {
-        await prisma.stockMovement.create({
-          data: {
-            productId: p.id,
-            type: "IN",
-            quantity: p.quantity,
-            reason: "Estoque inicial",
-            userId: owner.id,
-            createdAt: daysAgo(12),
-          },
-        });
-      }
+    const inReasons = [
+      "Compra de reposição",
+      "Produção finalizada",
+      "Devolução de cliente",
+    ];
+    const outReasons = ["Venda", "Consumo em produção", "Ajuste de inventário"];
+
+    // Estoque inicial espalhado: 1 produto por dia, de ~13 a ~2 dias atrás.
+    for (let i = 0; i < all.length; i += 1) {
+      const p = all[i];
+      if (p.quantity.lessThanOrEqualTo(0)) continue;
+      const day = Math.max(1, 13 - i);
+      await prisma.stockMovement.create({
+        data: {
+          productId: p.id,
+          type: "IN",
+          quantity: p.quantity,
+          reason: "Estoque inicial",
+          userId: owner.id,
+          createdAt: daysAgo(day, 8),
+        },
+      });
     }
 
-    // Pares entrada/saída de mesma quantidade (saldo zero) em dias recentes.
+    // Atividade variada (quantidades e dias distintos), saldo zero por produto.
     const activity = [
-      { sku: "MAS-ESP-500", q: 20, day: 6 },
-      { sku: "MAS-PEN-500", q: 15, day: 5 },
-      { sku: "MOL-TOM-340", q: 12, day: 4 },
-      { sku: "MAS-TAL-500", q: 10, day: 3 },
-      { sku: "ACO-QJO-100", q: 8, day: 2 },
-      { sku: "MAS-LAS-500", q: 10, day: 1 },
+      { sku: "INS-FAR-SEM", q: 40, inDay: 12, outDay: 6 },
+      { sku: "MAS-ESP-500", q: 30, inDay: 11, outDay: 9 },
+      { sku: "MAS-PEN-500", q: 12, inDay: 10, outDay: 4 },
+      { sku: "MAS-TAL-500", q: 10, inDay: 9, outDay: 2 },
+      { sku: "MOL-TOM-340", q: 18, inDay: 8, outDay: 7 },
+      { sku: "MAS-LAS-500", q: 15, inDay: 7, outDay: 1 },
+      { sku: "ACO-QJO-100", q: 8, inDay: 6, outDay: 5 },
+      { sku: "MAS-NHO-1000", q: 6, inDay: 5, outDay: 3 },
+      { sku: "MAS-RAV-RIC", q: 9, inDay: 4, outDay: 0 },
+      { sku: "MOL-PES-180", q: 7, inDay: 3, outDay: 2 },
+      { sku: "MAS-CAP-FRA", q: 5, inDay: 2, outDay: 0 },
     ];
 
-    for (const a of activity) {
+    for (let i = 0; i < activity.length; i += 1) {
+      const a = activity[i];
       const product = all.find((p) => p.sku === a.sku);
       if (!product) continue;
       await prisma.stockMovement.create({
@@ -226,9 +243,9 @@ async function main() {
           productId: product.id,
           type: "IN",
           quantity: a.q,
-          reason: "Compra de reposição",
+          reason: inReasons[i % inReasons.length],
           userId: owner.id,
-          createdAt: daysAgo(a.day),
+          createdAt: daysAgo(a.inDay, 11),
         },
       });
       await prisma.stockMovement.create({
@@ -236,9 +253,9 @@ async function main() {
           productId: product.id,
           type: "OUT",
           quantity: a.q,
-          reason: "Venda",
+          reason: outReasons[i % outReasons.length],
           userId: employee.id,
-          createdAt: daysAgo(Math.max(a.day - 1, 0)),
+          createdAt: daysAgo(a.outDay, 15),
         },
       });
     }

@@ -16,13 +16,13 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const [session, data] = await Promise.all([auth(), getDashboardData()]);
-  const firstName = session?.user?.name?.split(" ")[0] ?? "";
+  const userName = session?.user?.name?.trim() ?? "";
   const { totals } = data;
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title={`Olá${firstName ? `, ${firstName}` : ""} 👋`}
+        title={`Olá${userName ? `, ${userName}` : ""} 👋`}
         description="Visão geral do seu estoque."
       />
 

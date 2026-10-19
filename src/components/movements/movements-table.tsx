@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Select,
   SelectContent,
@@ -271,22 +272,28 @@ export function MovementsTable({
               </TableRow>
             ) : table.getRowModel().rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={columnCount} className="h-40">
-                  <div className="flex flex-col items-center justify-center gap-3 text-center">
-                    <ArrowRightLeft className="size-8 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium">
-                        {movements.length === 0
-                          ? "Nenhuma movimentação registrada"
-                          : "Nenhum resultado para os filtros"}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {movements.length === 0
-                          ? "Registre a primeira entrada ou saída."
-                          : "Ajuste a busca, o tipo ou o período."}
-                      </p>
-                    </div>
-                  </div>
+                <TableCell colSpan={columnCount} className="h-48">
+                  <EmptyState
+                    icon={ArrowRightLeft}
+                    title={
+                      movements.length === 0
+                        ? "Nenhuma movimentação registrada"
+                        : "Nenhum resultado para os filtros"
+                    }
+                    description={
+                      movements.length === 0
+                        ? "Registre a primeira entrada ou saída."
+                        : "Ajuste a busca, o tipo ou o período."
+                    }
+                    action={
+                      movements.length === 0 ? (
+                        <Button size="sm" onClick={() => setDialogOpen(true)}>
+                          <Plus className="size-4" />
+                          Registrar movimentação
+                        </Button>
+                      ) : undefined
+                    }
+                  />
                 </TableCell>
               </TableRow>
             ) : (

@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Table,
   TableBody,
@@ -63,14 +64,13 @@ export function AlertsList() {
   if (lowStock.length === 0) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-          <CheckCircle2 className="size-10 text-emerald-500" />
-          <div>
-            <p className="font-medium">Tudo em ordem!</p>
-            <p className="text-sm text-muted-foreground">
-              Nenhum produto está no ou abaixo do estoque mínimo.
-            </p>
-          </div>
+        <CardContent className="py-6">
+          <EmptyState
+            icon={CheckCircle2}
+            tone="success"
+            title="Tudo em ordem!"
+            description="Nenhum produto está no ou abaixo do estoque mínimo."
+          />
         </CardContent>
       </Card>
     );
@@ -103,10 +103,10 @@ export function AlertsList() {
                 <TableCell>
                   <Badge variant="secondary">{product.category}</Badge>
                 </TableCell>
-                <TableCell>
+                <TableCell className="tabular-nums">
                   {formatQuantity(product.quantity, product.unit)}
                 </TableCell>
-                <TableCell className="text-muted-foreground">
+                <TableCell className="tabular-nums text-muted-foreground">
                   {formatQuantity(product.minQuantity, product.unit)}
                 </TableCell>
                 <TableCell>

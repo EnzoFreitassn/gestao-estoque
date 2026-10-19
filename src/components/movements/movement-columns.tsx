@@ -33,7 +33,7 @@ export const movementColumns: ColumnDef<MovementDTO>[] = [
       <DataTableColumnHeader column={column} title="Data" />
     ),
     cell: ({ row }) => (
-      <span className="whitespace-nowrap text-sm">
+      <span className="whitespace-nowrap text-sm tabular-nums">
         {formatDateTime(row.original.createdAt)}
       </span>
     ),
@@ -84,8 +84,8 @@ export const movementColumns: ColumnDef<MovementDTO>[] = [
         <span
           className={
             type === "IN"
-              ? "font-medium text-emerald-600 dark:text-emerald-400"
-              : "font-medium text-destructive"
+              ? "font-medium tabular-nums text-emerald-600 dark:text-emerald-400"
+              : "font-medium tabular-nums text-destructive"
           }
         >
           {sign}

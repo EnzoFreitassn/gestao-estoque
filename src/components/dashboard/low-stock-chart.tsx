@@ -20,8 +20,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const QTY_COLOR = "#6366f1"; // indigo-500
-const MIN_COLOR = "#f59e0b"; // amber-500
+const QTY_COLOR = "#3b82f6"; // azul de marca (estoque atual)
+const MIN_COLOR = "#a1a1aa"; // cinza neutro (limiar mínimo)
 
 const tooltipStyle = {
   background: "var(--popover)",

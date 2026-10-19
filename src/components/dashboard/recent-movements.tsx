@@ -62,8 +62,8 @@ export function RecentMovements({ data }: { data: MovementDTO[] }) {
                   <span
                     className={
                       isIn
-                        ? "shrink-0 text-sm font-medium text-emerald-600 dark:text-emerald-400"
-                        : "shrink-0 text-sm font-medium text-destructive"
+                        ? "shrink-0 text-sm font-medium tabular-nums text-emerald-600 dark:text-emerald-400"
+                        : "shrink-0 text-sm font-medium tabular-nums text-destructive"
                     }
                   >
                     {isIn ? "+" : "−"}

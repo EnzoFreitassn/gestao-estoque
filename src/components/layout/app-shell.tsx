@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Menu, PanelLeftClose, PanelLeftOpen, Boxes } from "lucide-react";
+import { Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import type { Role } from "@prisma/client";
 
 import { cn } from "@/lib/utils";
@@ -17,24 +17,13 @@ import {
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { UserMenu } from "@/components/layout/user-menu";
+import { Brand } from "@/components/layout/brand";
 
 type SessionUser = {
   name?: string | null;
   email?: string | null;
   role: Role;
 };
-
-function Brand({ collapsed }: { collapsed?: boolean }) {
-  return (
-    <Link
-      href="/dashboard"
-      className="flex items-center gap-2 font-semibold tracking-tight"
-    >
-      <Boxes className="size-5 shrink-0 text-primary" />
-      {!collapsed && <span>Estoque</span>}
-    </Link>
-  );
-}
 
 export function AppShell({
   user,
@@ -61,7 +50,9 @@ export function AppShell({
             collapsed && "justify-center px-0",
           )}
         >
-          <Brand collapsed={collapsed} />
+          <Link href="/dashboard" aria-label="Farina — início">
+            <Brand iconOnly={collapsed} />
+          </Link>
         </div>
         <div className="flex-1 overflow-y-auto py-4">
           <SidebarNav role={user.role} collapsed={collapsed} />
@@ -92,8 +83,7 @@ export function AppShell({
             <SheetContent side="left" className="w-64 p-0">
               <SheetHeader className="h-14 justify-center border-b px-4 text-left">
                 <SheetTitle className="flex items-center gap-2">
-                  <Boxes className="size-5 text-primary" />
-                  Estoque
+                  <Brand />
                 </SheetTitle>
               </SheetHeader>
               <div className="py-4">

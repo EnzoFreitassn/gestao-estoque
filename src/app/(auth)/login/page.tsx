@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { Boxes, Loader2 } from "lucide-react";
+import { Loader2, Wheat } from "lucide-react";
 
 import { authenticate, type LoginState } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
@@ -36,11 +36,15 @@ export default function LoginPage() {
     <div className="flex min-h-svh items-center justify-center bg-muted/40 p-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="space-y-1 text-center">
-          <div className="mx-auto flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <Boxes className="size-6" />
+          <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-brand text-brand-foreground shadow-sm">
+            <Wheat className="size-6" />
           </div>
-          <CardTitle className="text-xl">Gestão de Estoque</CardTitle>
-          <CardDescription>Entre com seu email e senha</CardDescription>
+          <CardTitle className="font-display text-2xl tracking-tight">
+            Farina
+          </CardTitle>
+          <CardDescription>
+            Controle de estoque — entre para continuar
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form action={formAction} className="space-y-4" noValidate>

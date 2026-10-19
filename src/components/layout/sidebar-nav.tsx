@@ -51,7 +51,7 @@ export function SidebarNav({ role, collapsed, onNavigate }: SidebarNavProps) {
             )}
           >
             <span className="relative shrink-0">
-              <Icon className="size-4" />
+              <Icon className={cn("size-4", isActive && "text-brand")} />
               {showBadge && collapsed && (
                 <span className="absolute -right-1 -top-1 size-2 rounded-full bg-amber-500" />
               )}

@@ -83,7 +83,7 @@ export function createProductColumns({
         const { quantity, unit, lowStock } = row.original;
         return (
           <div className="flex items-center gap-2">
-            <span>{formatQuantity(quantity, unit)}</span>
+            <span className="tabular-nums">{formatQuantity(quantity, unit)}</span>
             {lowStock && <Badge variant="warning">Baixo</Badge>}
           </div>
         );
@@ -95,7 +95,7 @@ export function createProductColumns({
         <DataTableColumnHeader column={column} title="Custo" />
       ),
       cell: ({ row }) => (
-        <span className="text-muted-foreground">
+        <span className="tabular-nums text-muted-foreground">
           {formatBRL(row.original.costPrice)}
         </span>
       ),
@@ -105,7 +105,9 @@ export function createProductColumns({
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Venda" />
       ),
-      cell: ({ row }) => formatBRL(row.original.salePrice),
+      cell: ({ row }) => (
+        <span className="tabular-nums">{formatBRL(row.original.salePrice)}</span>
+      ),
     },
     {
       id: "actions",

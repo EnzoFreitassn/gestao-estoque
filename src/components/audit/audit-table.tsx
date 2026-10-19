@@ -19,6 +19,7 @@ import { DataTablePagination } from "@/components/data-table/pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Table,
   TableBody,
@@ -130,14 +131,12 @@ export function AuditTable() {
               </TableRow>
             ) : table.getRowModel().rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={columnCount} className="h-40">
-                  <div className="flex flex-col items-center justify-center gap-3 text-center">
-                    <FileClock className="size-8 text-muted-foreground" />
-                    <p className="font-medium">Nenhum registro de auditoria</p>
-                    <p className="text-sm text-muted-foreground">
-                      As ações sensíveis aparecerão aqui.
-                    </p>
-                  </div>
+                <TableCell colSpan={columnCount} className="h-48">
+                  <EmptyState
+                    icon={FileClock}
+                    title="Nenhum registro de auditoria"
+                    description="As ações sensíveis (criar, editar, excluir, movimentar) aparecerão aqui."
+                  />
                 </TableCell>
               </TableRow>
             ) : (

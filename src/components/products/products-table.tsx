@@ -22,6 +22,7 @@ import { DataTablePagination } from "@/components/data-table/pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Select,
   SelectContent,
@@ -213,28 +214,28 @@ export function ProductsTable({ canDelete }: { canDelete: boolean }) {
               </TableRow>
             ) : table.getRowModel().rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={columnCount} className="h-40">
-                  <div className="flex flex-col items-center justify-center gap-3 text-center">
-                    <PackageOpen className="size-8 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium">
-                        {products.length === 0
-                          ? "Nenhum produto cadastrado"
-                          : "Nenhum resultado para o filtro"}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {products.length === 0
-                          ? "Comece cadastrando seu primeiro produto."
-                          : "Ajuste a busca ou o filtro de categoria."}
-                      </p>
-                    </div>
-                    {products.length === 0 && (
-                      <Button size="sm" onClick={openCreate}>
-                        <Plus className="size-4" />
-                        Novo produto
-                      </Button>
-                    )}
-                  </div>
+                <TableCell colSpan={columnCount} className="h-48">
+                  <EmptyState
+                    icon={PackageOpen}
+                    title={
+                      products.length === 0
+                        ? "Nenhum produto cadastrado"
+                        : "Nenhum resultado para o filtro"
+                    }
+                    description={
+                      products.length === 0
+                        ? "Comece cadastrando seu primeiro produto."
+                        : "Ajuste a busca ou o filtro de categoria."
+                    }
+                    action={
+                      products.length === 0 ? (
+                        <Button size="sm" onClick={openCreate}>
+                          <Plus className="size-4" />
+                          Novo produto
+                        </Button>
+                      ) : undefined
+                    }
+                  />
                 </TableCell>
               </TableRow>
             ) : (
