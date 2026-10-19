@@ -1,10 +1,15 @@
 # Farina — Gestão de Estoque
 
+[![Demo ao vivo](https://img.shields.io/badge/demo-ao%20vivo-brightgreen?style=flat&logo=vercel)](https://gestao-estoque-enzo-8d11.vercel.app)
 [![CI](https://github.com/EnzoFreitassn/gestao-estoque/actions/workflows/ci.yml/badge.svg)](https://github.com/EnzoFreitassn/gestao-estoque/actions/workflows/ci.yml)
 
 Sistema de gestão de estoque para pequenos negócios, construído em torno de um
 caso real: uma **fábrica de massas**. Projeto full stack de portfólio, com foco
 em código profissional, legível e defensável.
+
+> 🔗 **Demo ao vivo:** https://gestao-estoque-enzo-8d11.vercel.app
+> &nbsp;·&nbsp; entre com **dono@massas.com** / **owner123** (ou
+> **funcionario@massas.com** / **employee123**).
 
 Permite cadastrar produtos, registrar entradas e saídas de estoque de forma
 consistente, acompanhar indicadores em um dashboard, receber alertas de estoque
