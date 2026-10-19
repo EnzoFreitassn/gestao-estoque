@@ -206,8 +206,27 @@ prisma/                      # schema, migrations, seed
 
 ## Screenshots
 
-> _A adicionar: login, dashboard (light/dark), produtos, movimentações,
-> alertas, importação com preview e auditoria._
+### Dashboard
+
+![Dashboard — gráficos de movimentações e estoque baixo](docs/screenshots/dashboard.png)
+
+### Produtos
+
+![Produtos — tabela com busca, filtro, ordenação e alerta de estoque baixo](docs/screenshots/produtos.png)
+
+### Movimentações
+
+![Movimentações — histórico com filtros por tipo e período](docs/screenshots/movimentacoes.png)
+
+![Registrar movimentação — entrada/saída com validação de estoque](docs/screenshots/registrar-movimentacao.png)
+
+### Estoque baixo
+
+![Estoque baixo — lista priorizada por criticidade](docs/screenshots/estoque-baixo.png)
+
+### Auditoria
+
+![Auditoria — registro de ações sensíveis (visível só ao OWNER)](docs/screenshots/auditoria.png)
 
 ---
 
